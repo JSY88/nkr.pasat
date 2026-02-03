@@ -2,6 +2,7 @@ const STRICT_INPUT_MODE = true;
 const IGNORE_LATE_ANSWERS = true;
 const INPUT_BLOCK_DURATION = 500;
 let minimumISI = 2000;
+const AUDIO_START_DELAY = 800; // 훈련 시작 전 오디오 준비 딜레이 (ms)
 
 let previousRoundAnswer = null;
 let lastRoundChangeTime = 0;
@@ -235,6 +236,11 @@ function calculateNbackAnswer(currentNum, sequence, nback) {
 }
 
 function startSession() {
+  if (!howlReady) {
+    alert('오디오가 아직 로딩 중입니다. 잠시 후 다시 시도해주세요.');
+    return;
+  }
+  
   if (!audioInitialized) audioInitialized = true;
   stopAllAudio();
   
@@ -306,8 +312,11 @@ function startSession() {
   trainingTimerId = setInterval(updateTimer, 1000);
   sessionActive = true;
   
-  setTimeout(() => presentNextNumber(), 1000);
+  setTimeout(() => presentNextNumber(), 1000 + AUDIO_START_DELAY);
 }
+
+
+
 
 async function presentNextNumber() {
   if (correctAnswer !== null) {
@@ -548,8 +557,18 @@ function processAnswer(userAnswer) {
 function updateTimer() {
   remainingTime--;
   updateTimerDisplay();
-  if (remainingTime <= 0) endSession();
+  
+  if (remainingTime <= 0) {
+    // 현재 진행 중인 trial이 있으면 완료 대기
+    if (!processingAnswer && correctAnswer !== null) {
+      // 잠시 대기 후 종료
+      setTimeout(() => endSession(), 500);
+    } else {
+      endSession();
+    }
+  }
 }
+
 
 function updateTimerDisplay() {
   const minutes = Math.floor(remainingTime / 60);
@@ -1116,14 +1135,18 @@ window.addEventListener('DOMContentLoaded', function() {
   const startingIntervalSelect = document.getElementById('startingIntervalSelect');
   
   if (customMode) {
-    customMode.addEventListener('click', function() {
+customMode.addEventListener('click', function() {
       customMode.classList.add('active');
       manualMode.classList.remove('active');
       isCustomMode = true;
       isManualMode = false;
       isStandardMode = false;
 
-      if (startingIntervalSelect) startingIntervalSelect.style.display = '';
+      // 적응형 모드: 시작 간격 행 전체와 최소 간격 표시
+      const startingIntervalRow = document.getElementById('startingIntervalSelect');
+      if (startingIntervalRow && startingIntervalRow.parentElement) {
+        startingIntervalRow.parentElement.style.display = 'block';
+      }
       if (minimumIntervalRow) minimumIntervalRow.style.display = 'block';
       if (manualIntervalRow) manualIntervalRow.style.display = 'none';
       
@@ -1137,16 +1160,18 @@ window.addEventListener('DOMContentLoaded', function() {
   }
   
   if (manualMode) {
-    manualMode.addEventListener('click', function() {
+manualMode.addEventListener('click', function() {
       manualMode.classList.add('active');
       customMode.classList.remove('active');
       isManualMode = true;
       isCustomMode = false;
       isStandardMode = false;
 
-    if (startingIntervalSelect) startingIntervalSelect.style.display = 'none';
-
-      
+      // 수동 모드: 시작 간격 행 전체와 최소 간격 숨김, 고정 간격 표시
+      const startingIntervalRow = document.getElementById('startingIntervalSelect');
+      if (startingIntervalRow && startingIntervalRow.parentElement) {
+        startingIntervalRow.parentElement.style.display = 'none';
+      }
       if (minimumIntervalRow) minimumIntervalRow.style.display = 'none';
       if (manualIntervalRow) manualIntervalRow.style.display = 'block';
       
