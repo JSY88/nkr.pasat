@@ -1,3 +1,4 @@
+// 간격 하한선 설정은 -> selectedISI = Math.max(500, selectedISI);
 const STRICT_INPUT_MODE = true;
 const IGNORE_LATE_ANSWERS = true;
 const INPUT_BLOCK_DURATION = 500;
@@ -263,7 +264,7 @@ function startSession() {
   trainingScreen.style.display = 'block';
   resultsScreen.style.display = 'none';
   
-  selectedISI = Math.max(1200, selectedISI);
+  selectedISI = Math.max(500, selectedISI);
   currentISIValue = selectedISI;
   currentISI.textContent = currentISIValue;
   consecutiveCorrect = 0;
