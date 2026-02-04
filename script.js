@@ -1,4 +1,3 @@
-// 간격 하한선 설정은 -> selectedISI = Math.max(500, selectedISI);
 const STRICT_INPUT_MODE = true;
 const IGNORE_LATE_ANSWERS = true;
 const INPUT_BLOCK_DURATION = 500;
@@ -774,6 +773,51 @@ function saveFeedbackSettings() {
   }
 }
 
+
+
+// 숫자 패드 설정 저장
+function saveNumberPadSettings() {
+  const settings = {
+    enabled: useNumberPad,
+    size: parseFloat(document.getElementById('numberpadSizeSlider')?.value || 1)
+  };
+  localStorage.setItem('numberpadSettings', JSON.stringify(settings));
+}
+
+// 숫자 패드 설정 불러오기
+function loadNumberPadSettings() {
+  try {
+    const saved = localStorage.getItem('numberpadSettings');
+    if (saved) {
+      const settings = JSON.parse(saved);
+      useNumberPad = settings.enabled || false;
+      
+      const toggle = document.getElementById('useNumberPad');
+      if (toggle) toggle.checked = useNumberPad;
+      
+      const sizeSlider = document.getElementById('numberpadSizeSlider');
+      if (sizeSlider && settings.size) {
+        sizeSlider.value = settings.size;
+        document.documentElement.style.setProperty('--numberpad-button-size', settings.size);
+        
+        const sizeValue = document.getElementById('numberpadSizeValue');
+        if (sizeValue) {
+          const size = settings.size;
+          sizeValue.textContent = size < 0.8 ? '작게' : size > 1.2 ? '크게' : '보통';
+        }
+      }
+      
+      const sizeControls = document.getElementById('numberpadSizeControls');
+      if (sizeControls) {
+        sizeControls.style.display = useNumberPad ? 'block' : 'none';
+      }
+    }
+  } catch (e) {
+    console.error('숫자 패드 설정 불러오기 오류:', e);
+  }
+}
+
+
 function loadThemePreference() {
   try {
     const savedTheme = localStorage.getItem('pasatTheme');
@@ -1082,6 +1126,7 @@ window.addEventListener('DOMContentLoaded', function() {
   loadBeepSettings();
   loadAudioSpeedSettings();
   loadFeedbackSettings();
+loadNumberPadSettings();
   loadThemePreference();
 
 
@@ -1322,6 +1367,7 @@ manualMode.addEventListener('click', function() {
       numberpadSizeValue.textContent = sizeText;
       document.documentElement.style.setProperty('--numberpad-button-size', size);
       if (trainingScreen.style.display !== 'none' && useNumberPad) updateNumberpadSize();
+      saveNumberPadSettings();
     });
   }
 
@@ -1330,6 +1376,8 @@ manualMode.addEventListener('click', function() {
       useNumberPad = this.checked;
       const sizeControls = document.getElementById('numberpadSizeControls');
       if (sizeControls) sizeControls.style.display = useNumberPad ? 'block' : 'none';
+
+      saveNumberPadSettings();
       
       if (trainingScreen.style.display !== 'none') {
         if (useNumberPad) {
