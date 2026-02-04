@@ -187,10 +187,7 @@
         border-bottom: none;
       }
       
-/* ============================================ */
-      /* 숫자 패드 개선된 디자인 */
-      /* ============================================ */
-      
+      /* 숫자 패드 디자인 */
       :root {
         --numberpad-button-size: 1;
         --numberpad-gradient-start: #667eea;
@@ -215,10 +212,7 @@
         position: relative;
         aspect-ratio: 1;
         width: 100%;
-        max-width: min(
-          calc(100px * var(--numberpad-button-size)),
-          calc((90vw - 4rem) / 3)
-        );
+        max-width: min(calc(100px * var(--numberpad-button-size)), calc((90vw - 4rem) / 3));
         min-height: clamp(50px, 15vw, calc(70px * var(--numberpad-button-size)));
         font-size: clamp(1.2rem, 5vw, calc(1.8rem * var(--numberpad-button-size)));
         font-weight: 700;
@@ -249,7 +243,6 @@
         box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.3);
       }
       
-      /* 다크모드 지원 */
       [data-theme="dark"] .numberpad {
         background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.2) 100%);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
@@ -259,8 +252,24 @@
         box-shadow: 0 2px 8px rgba(102, 126, 234, 0.5);
       }
       
-      /* 모바일 최적화 */
-      @media (max-width: 768px) {
+@media (max-width: 768px) {
+        .mode-cards-container {
+          grid-template-columns: 1fr;
+        }
+        
+        .settings-row {
+          grid-template-columns: 1fr;
+        }
+        
+        .header-buttons {
+          gap: 0.25rem;
+        }
+        
+        .icon-btn {
+          width: 32px;
+          height: 32px;
+        }
+        
         .numberpad {
           max-width: min(340px, 95vw);
           gap: clamp(0.4rem, 1.5vw, 0.75rem);
@@ -269,10 +278,7 @@
         }
         
         .numberpad-button {
-          max-width: min(
-            calc(80px * var(--numberpad-button-size)),
-            calc((95vw - 3rem) / 3)
-          );
+          max-width: min(calc(80px * var(--numberpad-button-size)), calc((95vw - 3rem) / 3));
           min-height: clamp(45px, 12vw, calc(60px * var(--numberpad-button-size)));
           font-size: clamp(1.1rem, 4.5vw, calc(1.5rem * var(--numberpad-button-size)));
           border-radius: 10px;
@@ -291,12 +297,8 @@
           min-height: clamp(40px, 11vw, 55px);
           font-size: clamp(1rem, 4vw, 1.3rem);
         }
+        }
       }
-      
-      /* ============================================ */
-      /* 숫자 패드 디자인 끝 */
-      /* ============================================ */
-
 
     </style>
   </head>
