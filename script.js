@@ -787,36 +787,49 @@ function saveNumberPadSettings() {
 // 숫자 패드 설정 불러오기
 function loadNumberPadSettings() {
   try {
-    const saved = localStorage.getItem('numberpadSettings');
+    const saved = localStorage.getItem('pasatNumberPadSettings');
+    let savedSize = 1;
+    
     if (saved) {
       const settings = JSON.parse(saved);
       useNumberPad = settings.enabled || false;
+      savedSize = settings.size || 1;
       
       const toggle = document.getElementById('useNumberPad');
       if (toggle) toggle.checked = useNumberPad;
+    }
+    
+    // 모바일 자동 크기 조절
+    const isMobile = window.innerWidth <= 768;
+    const isSmallMobile = window.innerWidth <= 480;
+    
+    let finalSize = savedSize;
+    if (isSmallMobile && savedSize > 1) {
+      finalSize = 0.8; // 작은 모바일에서는 최대 0.8
+    } else if (isMobile && savedSize > 1.2) {
+      finalSize = 1; // 모바일에서는 최대 1
+    }
+    
+    const sizeSlider = document.getElementById('numberpadSizeSlider');
+    if (sizeSlider) {
+      sizeSlider.value = finalSize;
+      document.documentElement.style.setProperty('--numberpad-button-size', finalSize);
       
-      const sizeSlider = document.getElementById('numberpadSizeSlider');
-      if (sizeSlider && settings.size) {
-        sizeSlider.value = settings.size;
-        document.documentElement.style.setProperty('--numberpad-button-size', settings.size);
-        
-        const sizeValue = document.getElementById('numberpadSizeValue');
-        if (sizeValue) {
-          const size = settings.size;
-          sizeValue.textContent = size < 0.8 ? '작게' : size > 1.2 ? '크게' : '보통';
-        }
-      }
-      
-      const sizeControls = document.getElementById('numberpadSizeControls');
-      if (sizeControls) {
-        sizeControls.style.display = useNumberPad ? 'block' : 'none';
+      const sizeValue = document.getElementById('numberpadSizeValue');
+      if (sizeValue) {
+        const size = finalSize;
+        sizeValue.textContent = size < 0.8 ? '작게' : size > 1.2 ? '크게' : '보통';
       }
     }
-  } catch (e) {
-    console.error('숫자 패드 설정 불러오기 오류:', e);
+    
+    const sizeControls = document.getElementById('numberpadSizeControls');
+    if (sizeControls) {
+      sizeControls.style.display = useNumberPad ? 'block' : 'none';
+    }
+  } catch (error) {
+    console.error('숫자 패드 설정 불러오기 오류:', error);
   }
 }
-
 
 function loadThemePreference() {
   try {
@@ -1580,6 +1593,34 @@ manualMode.addEventListener('click', function() {
         if (!modal.classList.contains('hidden')) modal.classList.add('hidden');
       });
     }
+  });
+
+  // ============================================
+  // 🆕 여기부터 추가하세요
+  // ============================================
+  
+  // 화면 크기 변경 시 숫자 패드 크기 재조정
+  let resizeTimeout;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function() {
+      const currentSize = parseFloat(document.documentElement.style.getPropertyValue('--numberpad-button-size') || 1);
+      const isMobile = window.innerWidth <= 768;
+      const isSmallMobile = window.innerWidth <= 480;
+      
+      let adjustedSize = currentSize;
+      if (isSmallMobile && currentSize > 0.8) {
+        adjustedSize = 0.8;
+      } else if (isMobile && currentSize > 1) {
+        adjustedSize = 1;
+      }
+      
+      if (adjustedSize !== currentSize) {
+        document.documentElement.style.setProperty('--numberpad-button-size', adjustedSize);
+        const sizeSlider = document.getElementById('numberpadSizeSlider');
+        if (sizeSlider) sizeSlider.value = adjustedSize;
+      }
+    }, 100);
   });
 });
 
