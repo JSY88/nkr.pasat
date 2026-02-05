@@ -187,116 +187,106 @@
         border-bottom: none;
       }
       
+/* ============================================ */
       /* 숫자 패드 디자인 */
+      /* ============================================ */
+      
       :root {
-        --numberpad-button-size: 1;
-        --numberpad-gradient-start: #667eea;
-        --numberpad-gradient-end: #764ba2;
+        --numberpad-button-size: 1;  /* 버튼 크기 배율 (슬라이더로 조절됨) */
       }
       
       .numberpad {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: clamp(0.5rem, 2vw, 1rem);
-        max-width: min(360px, 90vw);
-        width: 100%;
-        margin: 1.5rem auto;
-        padding: clamp(0.75rem, 3vw, 1.5rem);
-        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        grid-template-columns: repeat(4, 1fr);  /* 열 개수: 3 → 4로 바꾸면 4열 */
+  gap: 0.3rem !important;  /* !important 추가 */
+        //gap: calc(0.1rem * var(--numberpad-button-size));  /* 버튼 간격: 0.1rem 숫자 조절 (작게: 0.1, 크게: 0.8) */
+        max-width: 360px;  /* 전체 패드 최대 너비 */
+        width: fit-content;  /* 버튼 크기에 맞춰 자동 조절 */
+        margin: 1.5rem auto;  /* 위아래 여백 */
+        padding: 1.2rem;  /* 패드 안쪽 여백 */
+        background: rgba(248, 250, 252, 0.8);  /* 패드 배경색 (밝은 회색) */
+        border-radius: 16px;  /* 패드 모서리 둥글기 */
+        backdrop-filter: blur(10px);  /* 배경 블러 효과 */
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);  /* 그림자 */
       }
       
       .numberpad-button {
-        position: relative;
-        aspect-ratio: 1;
-        width: 100%;
-        max-width: min(calc(100px * var(--numberpad-button-size)), calc((90vw - 4rem) / 3));
-        min-height: clamp(50px, 15vw, calc(70px * var(--numberpad-button-size)));
-        font-size: clamp(1.2rem, 5vw, calc(1.8rem * var(--numberpad-button-size)));
-        font-weight: 700;
-        color: white;
-        background: linear-gradient(135deg, var(--numberpad-gradient-start), var(--numberpad-gradient-end));
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
-        justify-self: center;
+        width: calc(50px * var(--numberpad-button-size));  /* 버튼 너비: 50px이 기본 크기 */
+        height: calc(35px * var(--numberpad-button-size));  /* 버튼 높이: 35px이 기본 크기 */
+        font-size: calc(1.6rem * var(--numberpad-button-size));  /* 숫자 크기: 1.6rem이 기본 */
+        font-weight: 600;  /* 숫자 굵기 */
+        color: #334155;  /* 숫자 색상 (진한 회색) */
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);  /* 버튼 배경 그라데이션 (연한 회색) */
+        border: 2px solid #cbd5e1;  /* 버튼 테두리 색상 */
+        border-radius: 5px;  /* 버튼 모서리 둥글기 */
+        cursor: pointer;  /* 마우스 커서 모양 */
+        transition: transform 0.1s ease;  /* 누를 때 애니메이션 속도 */
+        -webkit-tap-highlight-color: transparent;  /* 모바일 탭 하이라이트 제거 */
+        touch-action: manipulation;  /* 터치 최적화 */
       }
       
       .numberpad-button:active {
-        transform: scale(0.95);
-        box-shadow: 0 1px 4px rgba(102, 126, 234, 0.4);
+        transform: scale(0.96);  /* 버튼 누를 때 크기: 0.96 = 약간 작아짐 (0.90 = 더 작아짐) */
       }
       
-      .numberpad-button.selected {
-        background: linear-gradient(135deg, #48bb78, #38a169);
-        box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.3);
-      }
-      
-      .numberpad-button.incorrect-selection {
-        background: linear-gradient(135deg, #f56565, #e53e3e);
-        box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.3);
-      }
-      
+      /* ============================================ */
+      /* 다크모드 색상 */
+      /* ============================================ */
       [data-theme="dark"] .numberpad {
-        background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.2) 100%);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        background: rgba(30, 41, 59, 0.9);  /* 다크모드 패드 배경 (어두운 슬레이트) */
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);  /* 다크모드 그림자 */
       }
       
       [data-theme="dark"] .numberpad-button {
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.5);
+        color: #e2e8f0;  /* 다크모드 숫자 색상 (밝은 회색) */
+        background: linear-gradient(135deg, #334155 0%, #475569 100%);  /* 다크모드 버튼 배경 */
+        border: 2px solid #475569;  /* 다크모드 테두리 */
       }
       
-@media (max-width: 768px) {
-        .mode-cards-container {
-          grid-template-columns: 1fr;
-        }
-        
-        .settings-row {
-          grid-template-columns: 1fr;
-        }
-        
-        .header-buttons {
-          gap: 0.25rem;
-        }
-        
-        .icon-btn {
-          width: 32px;
-          height: 32px;
-        }
-        
+      /* ============================================ */
+      /* Alternative 테마 색상 */
+      /* ============================================ */
+      [data-theme="alternative"] .numberpad {
+        background: rgba(254, 252, 232, 0.9);  /* Alternative 패드 배경 (따뜻한 베이지) */
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      }
+      
+      [data-theme="alternative"] .numberpad-button {
+        color: #78350f;  /* Alternative 숫자 색상 (갈색) */
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);  /* Alternative 버튼 배경 (노란색) */
+        border: 2px solid #fbbf24;  /* Alternative 테두리 (골드) */
+      }
+
+      /* ============================================ */
+      /* 모바일 최적화 (768px 이하) */
+      /* ============================================ */
+      @media (max-width: 768px) {
         .numberpad {
-          max-width: min(340px, 95vw);
-          gap: clamp(0.4rem, 1.5vw, 0.75rem);
-          padding: clamp(0.5rem, 2vw, 1rem);
-          margin: 1rem auto;
+          padding: 1rem;  /* 모바일 패드 여백 */
+            gap: 0.25rem !important;  /* !important 추가 */  /* 모바일 버튼 간격 */
         }
         
         .numberpad-button {
-          max-width: min(calc(80px * var(--numberpad-button-size)), calc((95vw - 3rem) / 3));
-          min-height: clamp(45px, 12vw, calc(60px * var(--numberpad-button-size)));
-          font-size: clamp(1.1rem, 4.5vw, calc(1.5rem * var(--numberpad-button-size)));
-          border-radius: 10px;
+          width: calc(45px * var(--numberpad-button-size));  /* 모바일 버튼 너비: 45px */
+          height: calc(30px * var(--numberpad-button-size));  /* 모바일 버튼 높이: 30px */
+          font-size: calc(1.4rem * var(--numberpad-button-size));  /* 모바일 숫자 크기 */
+          border-radius: 5px;  /* 모바일 모서리 */
         }
       }
       
+      /* ============================================ */
+      /* 작은 모바일 최적화 (480px 이하) */
+      /* ============================================ */
       @media (max-width: 480px) {
         .numberpad {
-          max-width: min(300px, 100vw - 2rem);
-          gap: 0.4rem;
-          padding: 0.75rem;
+          padding: 0.8rem;  /* 작은 모바일 패드 여백 */
+            gap: 0.2rem !important;  /* !important 추가 */  /* 작은 모바일 버튼 간격 */
         }
         
         .numberpad-button {
-          max-width: calc((100vw - 4rem) / 3);
-          min-height: clamp(40px, 11vw, 55px);
-          font-size: clamp(1rem, 4vw, 1.3rem);
-        }
+          width: calc(40px * var(--numberpad-button-size));  /* 작은 모바일 버튼 너비: 40px */
+          height: calc(28px * var(--numberpad-button-size));  /* 작은 모바일 버튼 높이: 28px */
+          font-size: calc(1.3rem * var(--numberpad-button-size));  /* 작은 모바일 숫자 크기 */
         }
       }
 
