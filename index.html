@@ -192,123 +192,104 @@
 /* 숫자 패드 디자인 (정적 · 그리드 종속형) */
 /* ============================================ */
 
+/* ============================================
+   숫자 패드 기본 변수
+============================================ */
+
 :root {
-  --numberpad-gradient-start: #667eea;
-  --numberpad-gradient-end: #764ba2;
+  --numberpad-scale: 1;
+  --numberpad-base-size: 56px;
+  --numberpad-gap: 0.5rem;
 }
 
-/* 숫자패드 컨테이너 */
+/* ============================================
+   숫자 패드 컨테이너
+============================================ */
+
 .numberpad {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
+  gap: var(--numberpad-gap);
 
-  width: min(360px, 90vw);
+  width: fit-content;
+  max-width: 95vw;
+
   margin: 1.5rem auto;
   padding: 1rem;
 
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,0.1),
-    rgba(255,255,255,0.05)
-  );
-  border-radius: 20px;
+  background: rgba(248, 250, 252, 0.85);
+  border-radius: 16px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
-/* 숫자 버튼 */
+/* ============================================
+   버튼
+============================================ */
+
 .numberpad-button {
-  aspect-ratio: 1;
-  width: 100%;
+  width: calc(var(--numberpad-base-size) * var(--numberpad-scale));
+  height: calc(var(--numberpad-base-size) * var(--numberpad-scale));
 
-  font-size: clamp(1.2rem, 4vw, 1.8rem);
-  font-weight: 700;
-  color: #fff;
+  min-width: 44px;
+  min-height: 44px; /* 모바일 터치 안전 */
 
-  background: linear-gradient(
-    135deg,
-    var(--numberpad-gradient-start),
-    var(--numberpad-gradient-end)
-  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  font-size: calc(1.4rem * var(--numberpad-scale));
+  font-weight: 600;
 
-  /* 인터랙션 제거 */
-  cursor: default;
-  transition: none;
-  transform: none;
+  color: #334155;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
 
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: background 0.15s ease, box-shadow 0.15s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
-/* hover / active 완전 무효화 */
-.numberpad-button:hover,
 .numberpad-button:active {
-  background: linear-gradient(
-    135deg,
-    var(--numberpad-gradient-start),
-    var(--numberpad-gradient-end)
-  );
-  transform: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  background: #e2e8f0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-/* 상태 표현은 유지 */
-.numberpad-button.selected {
-  background: linear-gradient(135deg, #48bb78, #38a169);
-  box-shadow: 0 0 0 3px rgba(72,187,120,0.35);
-}
+/* ============================================
+   다크모드
+============================================ */
 
-.numberpad-button.incorrect-selection {
-  background: linear-gradient(135deg, #f56565, #e53e3e);
-  box-shadow: 0 0 0 3px rgba(245,101,101,0.35);
-}
-
-/* 다크 모드 */
 [data-theme="dark"] .numberpad {
-  background: linear-gradient(
-    135deg,
-    rgba(0,0,0,0.35),
-    rgba(0,0,0,0.25)
-  );
-  box-shadow: 0 4px 20px rgba(0,0,0,0.45);
+  background: rgba(30, 41, 59, 0.9);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
 [data-theme="dark"] .numberpad-button {
-  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  color: #e2e8f0;
+  background: linear-gradient(135deg, #334155, #475569);
+  border-color: #475569;
 }
 
-/* ============================================ */
-/* 반응형: “전체 비율 유지”만 조정 */
-/* ============================================ */
+/* ============================================
+   모바일 대응
+============================================ */
 
 @media (max-width: 768px) {
   .numberpad {
-    width: min(340px, 95vw);
-    gap: 0.45rem;
-    padding: 0.9rem;
-    margin: 1rem auto;
-  }
-
-  .numberpad-button {
-    font-size: clamp(1.1rem, 4.5vw, 1.5rem);
-    border-radius: 10px;
+    padding: 0.8rem;
+    gap: 0.4rem;
   }
 }
 
 @media (max-width: 480px) {
   .numberpad {
-    width: min(300px, calc(100vw - 2rem));
-    gap: 0.4rem;
-    padding: 0.75rem;
-  }
-
-  .numberpad-button {
-    font-size: clamp(1rem, 4vw, 1.3rem);
+    gap: 0.3rem;
   }
 }
 
