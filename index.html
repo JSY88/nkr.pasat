@@ -188,189 +188,129 @@
       }
       
   /* ============================================ */
-      /* 숫자 패드 디자인 */
-      /* ============================================ */
-      
-      :root {
-        /* 전역 변수: 슬라이더에서 조절하는 크기 배율 
-           0.5 = 절반 크기, 1.0 = 기본, 2.0 = 두 배 크기 */
-        --numberpad-button-size: 1;
-      }
-      
-      .numberpad {
-        display: grid;  /* 격자 레이아웃 사용 */
-        
-        /* 🔢 열 개수 설정 */
-        grid-template-columns: repeat(4, 1fr);  
-        /* repeat(열개수, 1fr) 
-           - 3 → 3열 (2-3-4 / 5-6-7 / 8-9-10)
-           - 4 → 4열 (2-3-4-5 / 6-7-8-9 / 10-11-12-13)
-           - 5 → 5열 */
-        
-        /* 📏 버튼 간 간격 (상하좌우 모두 적용) */
-        gap: calc(0.6rem * var(--numberpad-button-size));
-        /* 0.6rem이 기본값:
-           - 0.3rem = 매우 좁게 (빽빽함)
-           - 0.4rem = 좁게
-           - 0.6rem = 보통 (현재)
-           - 0.8rem = 넓게
-           - 1.0rem = 매우 넓게
-           * 슬라이더 크기에 비례해서 자동 조절됨 */
-        
-        /* 📦 전체 패드 크기 */
-        max-width: 360px;  /* 패드 전체 최대 너비 (늘리면 패드가 더 넓어짐) */
-        width: fit-content;  /* 버튼 개수와 크기에 맞춰 자동으로 너비 결정 */
-        
-        /* 🎨 패드 위치 및 여백 */
-        margin: 1.5rem auto;  /* 위아래 1.5rem 여백, 좌우 중앙 정렬 */
-        padding: 1.2rem;  /* 패드 안쪽 여백 (테두리와 버튼 사이 공간) */
-        
-        /* 🌈 패드 배경 스타일 */
-        background: rgba(248, 250, 252, 0.8);  
-        /* rgba(R, G, B, 투명도)
-           - 248, 250, 252 = 연한 회색
-           - 0.8 = 80% 불투명 (0.5 = 반투명, 1.0 = 완전 불투명) */
-        
-        border-radius: 16px;  /* 모서리 둥글기 (0 = 각짐, 20 = 더 둥글게) */
-        backdrop-filter: blur(10px);  /* 배경 블러 효과 (0 = 효과없음, 20 = 많이 흐림) */
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);  
-        /* 그림자: 가로이동 세로이동 번짐정도 색상(투명도)
-           - 2px = 아래로 2px 이동
-           - 12px = 12px만큼 번짐
-           - 0.06 = 6% 불투명 (연한 그림자) */
-      }
-      
-      .numberpad-button {
-        /* 🔲 버튼 크기 */
-        width: calc(70px * var(--numberpad-button-size));
-        height: calc(70px * var(--numberpad-button-size));
-        /* 70px이 기본 크기:
-           - 슬라이더 0.5배 → 35px × 35px
-           - 슬라이더 1.0배 → 70px × 70px (기본)
-           - 슬라이더 1.5배 → 105px × 105px
-           - 슬라이더 2.0배 → 140px × 140px
-           * 50px, 60px, 80px 등으로 변경 가능 */
-        
-        /* 🔤 숫자 크기 */
-        font-size: calc(1.6rem * var(--numberpad-button-size));
-        /* 1.6rem이 기본 숫자 크기:
-           - 1.2rem = 작게
-           - 1.6rem = 보통 (현재)
-           - 2.0rem = 크게
-           * 슬라이더에 비례해서 자동 조절됨 */
-        
-        font-weight: 600;  /* 숫자 굵기 (100=얇게, 400=보통, 700=굵게, 900=매우굵게) */
-        
-        /* 🎨 버튼 색상 */
-        color: #334155;  /* 숫자 색상 (진한 회색) */
-        /* 다른 색상 예시:
-           - #000000 = 검정
-           - #ffffff = 흰색
-           - #1e40af = 파란색
-           - #dc2626 = 빨간색 */
-        
-        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-        /* 그라데이션 배경:
-           - 135deg = 각도 (0=위에서아래, 90=왼쪽에서오른쪽, 135=대각선)
-           - #f1f5f9 = 시작 색상 (연한 회색)
-           - #e2e8f0 = 끝 색상 (조금 더 진한 회색)
-           * 단색 원하면: background: #f1f5f9; */
-        
-        border: 2px solid #cbd5e1;  
-        /* 테두리: 두께 스타일 색상
-           - 2px = 테두리 두께 (1px=얇게, 3px=굵게)
-           - solid = 실선 (dashed=점선, dotted=점)
-           - #cbd5e1 = 테두리 색상 (중간 회색) */
-        
-        border-radius: 12px;  /* 버튼 모서리 둥글기 (0=각짐, 20=매우둥글게) */
-        
-        /* 🖱️ 인터랙션 */
-        cursor: pointer;  /* 마우스 올리면 손가락 모양 */
-        transition: transform 0.1s ease;  
-        /* 애니메이션 전환 효과:
-           - transform = 크기/위치 변화
-           - 0.1s = 0.1초 (0.2s = 더 느리게, 0.05s = 더 빠르게)
-           - ease = 부드럽게 */
-        
-        -webkit-tap-highlight-color: transparent;  /* 모바일 탭 시 파란 하이라이트 제거 */
-        touch-action: manipulation;  /* 터치 최적화 (더블탭 줌 방지) */
-      }
-      
-      .numberpad-button:active {
-        /* 버튼을 누르고 있을 때 */
-        transform: scale(0.96);
-        /* 크기 변화:
-           - 0.96 = 4% 작아짐 (살짝 눌림 효과)
-           - 0.90 = 10% 작아짐 (더 눌림)
-           - 1.05 = 5% 커짐 (튀어나옴)
-           - 1.0 = 변화 없음 */
-      }
+/* ============================================ */
+/* 숫자 패드 디자인 (정적 · 그리드 종속형) */
+/* ============================================ */
 
+:root {
+  --numberpad-gradient-start: #667eea;
+  --numberpad-gradient-end: #764ba2;
+}
+
+/* 숫자패드 컨테이너 */
+.numberpad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+
+  width: min(360px, 90vw);
+  margin: 1.5rem auto;
+  padding: 1rem;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.1),
+    rgba(255,255,255,0.05)
+  );
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* 숫자 버튼 */
+.numberpad-button {
+  aspect-ratio: 1;
+  width: 100%;
+
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  font-weight: 700;
+  color: #fff;
+
+  background: linear-gradient(
+    135deg,
+    var(--numberpad-gradient-start),
+    var(--numberpad-gradient-end)
+  );
+
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+
+  /* 인터랙션 제거 */
+  cursor: default;
+  transition: none;
+  transform: none;
+
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* hover / active 완전 무효화 */
+.numberpad-button:hover,
+.numberpad-button:active {
+  background: linear-gradient(
+    135deg,
+    var(--numberpad-gradient-start),
+    var(--numberpad-gradient-end)
+  );
+  transform: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+/* 상태 표현은 유지 */
+.numberpad-button.selected {
+  background: linear-gradient(135deg, #48bb78, #38a169);
+  box-shadow: 0 0 0 3px rgba(72,187,120,0.35);
+}
+
+.numberpad-button.incorrect-selection {
+  background: linear-gradient(135deg, #f56565, #e53e3e);
+  box-shadow: 0 0 0 3px rgba(245,101,101,0.35);
+}
+
+/* 다크 모드 */
+[data-theme="dark"] .numberpad {
+  background: linear-gradient(
+    135deg,
+    rgba(0,0,0,0.35),
+    rgba(0,0,0,0.25)
+  );
+  box-shadow: 0 4px 20px rgba(0,0,0,0.45);
+}
+
+[data-theme="dark"] .numberpad-button {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
 
 /* ============================================ */
-      /* 다크모드 색상 (테마 전환 시 자동 적용) */
-      /* ============================================ */
-      [data-theme="dark"] .numberpad {
-        /* 다크모드일 때 패드 스타일 */
-        background: rgba(30, 41, 59, 0.9);  /* 어두운 슬레이트 배경 */
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);  /* 더 진한 그림자 */
-      }
-      
-      [data-theme="dark"] .numberpad-button {
-        /* 다크모드일 때 버튼 스타일 */
-        color: #e2e8f0;  /* 밝은 회색 숫자 (어두운 배경에 보이도록) */
-        background: linear-gradient(135deg, #334155 0%, #475569 100%);  /* 어두운 버튼 */
-        border: 2px solid #475569;  /* 어두운 테두리 */
-      }
-      
-      /* ============================================ */
-      /* Alternative 테마 색상 (따뜻한 느낌) */
-      /* ============================================ */
-      [data-theme="alternative"] .numberpad {
-        background: rgba(254, 252, 232, 0.9);  /* 베이지/크림 배경 */
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-      }
-      
-      [data-theme="alternative"] .numberpad-button {
-        color: #78350f;  /* 갈색 숫자 */
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);  /* 노란색 버튼 */
-        border: 2px solid #fbbf24;  /* 골드 테두리 */
-      }
-
+/* 반응형: “전체 비율 유지”만 조정 */
 /* ============================================ */
-      /* 📱 태블릿/모바일 최적화 (화면 768px 이하) */
-      /* ============================================ */
-      @media (max-width: 768px) {
-        .numberpad {
-          padding: 1rem;  /* 모바일에서 패드 여백 줄임 (1.2rem → 1rem) */
-          gap: calc(0.5rem * var(--numberpad-button-size));  
-          /* 모바일에서 버튼 간격 줄임 (0.6rem → 0.5rem) */
-        }
-        
-        .numberpad-button {
-          width: calc(60px * var(--numberpad-button-size));  /* PC 70px → 모바일 60px */
-          height: calc(60px * var(--numberpad-button-size));
-          font-size: calc(1.4rem * var(--numberpad-button-size));  /* 숫자도 약간 작게 */
-          border-radius: 10px;  /* 모서리도 약간 덜 둥글게 */
-        }
-      }
-      
-      /* ============================================ */
-      /* 📱 작은 모바일 최적화 (화면 480px 이하) */
-      /* ============================================ */
-      @media (max-width: 480px) {
-        .numberpad {
-          padding: 0.8rem;  /* 더 작은 여백 */
-          gap: calc(0.4rem * var(--numberpad-button-size));  
-          /* 더 좁은 간격 (0.5rem → 0.4rem) */
-        }
-        
-        .numberpad-button {
-          width: calc(55px * var(--numberpad-button-size));  /* 더 작은 버튼 */
-          height: calc(55px * var(--numberpad-button-size));
-          font-size: calc(1.3rem * var(--numberpad-button-size));  /* 더 작은 숫자 */
-        }
-      }
+
+@media (max-width: 768px) {
+  .numberpad {
+    width: min(340px, 95vw);
+    gap: 0.45rem;
+    padding: 0.9rem;
+    margin: 1rem auto;
+  }
+
+  .numberpad-button {
+    font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .numberpad {
+    width: min(300px, calc(100vw - 2rem));
+    gap: 0.4rem;
+    padding: 0.75rem;
+  }
+
+  .numberpad-button {
+    font-size: clamp(1rem, 4vw, 1.3rem);
+  }
+}
 
     </style>
   </head>
