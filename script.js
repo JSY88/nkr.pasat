@@ -325,7 +325,11 @@ async function presentNextNumber() {
     inputBlockedUntil = Date.now() + INPUT_BLOCK_DURATION;
   }
 
-  if (!sessionActive || nextNumberScheduled) return;
+  if (!sessionActive || nextNumberScheduled) {
+    nextNumberScheduled = false;
+    return;
+  }
+
   nextNumberScheduled = true;
   
   if (currentIntervalId) {
@@ -390,12 +394,22 @@ async function presentNextNumber() {
     answerInput.focus();
   }
   
-  try {
+try {
     await speakNumber(currentNumber);
+    
+    // 오디오 재생 완료 후 세션 상태 다시 확인
+    if (!sessionActive) {
+      nextNumberScheduled = false;
+      return;
+    }
     
     if (numberSequence.length >= nbackValue + 1) {
       nextPresentationTime = Date.now() + currentISIValue;
-      currentIntervalId = setTimeout(() => presentNextNumber(), currentISIValue);
+      
+      // 세션이 활성화된 경우에만 다음 숫자 스케줄링
+      if (sessionActive) {
+        currentIntervalId = setTimeout(() => presentNextNumber(), currentISIValue);
+      }
       
       const trialId = currentTrialId;
       const trialPresentationTime = Date.now();
@@ -456,10 +470,16 @@ async function presentNextNumber() {
           }
         }
       }, currentISIValue);
-    } else {
+
+} else {
       nextPresentationTime = Date.now() + currentISIValue;
-      currentIntervalId = setTimeout(() => presentNextNumber(), currentISIValue);
+      
+      // 세션이 활성화된 경우에만 다음 숫자 스케줄링
+      if (sessionActive) {
+        currentIntervalId = setTimeout(() => presentNextNumber(), currentISIValue);
+      }
     }
+
   } catch (error) {
     nextNumberScheduled = false;
     setTimeout(() => {
@@ -559,15 +579,43 @@ function updateTimer() {
   updateTimerDisplay();
   
   if (remainingTime <= 0) {
-    // 현재 진행 중인 trial이 있으면 완료 대기
-    if (!processingAnswer && correctAnswer !== null) {
-      // 잠시 대기 후 종료
-      setTimeout(() => endSession(), 500);
-    } else {
-      endSession();
+    // 타이머 중지
+    if (trainingTimerId) {
+      clearInterval(trainingTimerId);
+      trainingTimerId = null;
     }
+    
+    // 새로운 숫자 제시 중단
+    sessionActive = false;
+    
+    // 진행 중인 타임아웃 제거
+    if (currentIntervalId) {
+      clearTimeout(currentIntervalId);
+      currentIntervalId = null;
+    }
+    
+    // 현재 trial이 완료될 때까지 대기
+    // 최대 대기 시간: 현재 ISI + 2초 (사용자 응답 여유 시간)
+    const maxWaitTime = currentISIValue + 2000;
+    
+    // 주기적으로 확인하여 답변이 처리되면 즉시 종료
+    let elapsedTime = 0;
+    const checkInterval = 100; // 100ms마다 확인
+    
+    const waitForCompletion = setInterval(() => {
+      elapsedTime += checkInterval;
+      
+      // 조건 1: 답변이 처리됨 (정상 완료)
+      // 조건 2: 최대 대기 시간 초과
+      // 조건 3: correctAnswer가 null (더 이상 진행 중인 trial 없음)
+      if (answerProcessed || elapsedTime >= maxWaitTime || correctAnswer === null) {
+        clearInterval(waitForCompletion);
+        endSession();
+      }
+    }, checkInterval);
   }
 }
+
 
 
 function updateTimerDisplay() {
@@ -597,8 +645,11 @@ function endSession() {
   audioPlayInProgress = false;
   forcePresentNextNumber = false;
   
-  trainingScreen.style.display = 'none';
-  resultsScreen.style.display = 'block';
+  // 1초 후 화면 전환
+  setTimeout(() => {
+    trainingScreen.style.display = 'none';
+    resultsScreen.style.display = 'block';
+  }, 2000);
   
   correctCount.textContent = totalCorrect;
   totalCount.textContent = totalAttempts;
