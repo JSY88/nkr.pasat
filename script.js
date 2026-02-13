@@ -867,6 +867,11 @@ function loadNumberPadSettings() {
         if (sizeValue) {
           sizeValue.textContent = savedSize < 0.8 ? '작게' : savedSize > 1.2 ? '크게' : '보통';
         }
+        
+        // 저장된 크기를 실제 버튼에 적용
+        if (numberpadButtons && numberpadButtons.length > 0) {
+          updateNumberpadSize();
+        }
       }
       
       const sizeControls = document.getElementById('numberpadSizeControls');
