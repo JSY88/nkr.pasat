@@ -867,11 +867,6 @@ function loadNumberPadSettings() {
         if (sizeValue) {
           sizeValue.textContent = savedSize < 0.8 ? '작게' : savedSize > 1.2 ? '크게' : '보통';
         }
-        
-        // 저장된 크기를 실제 버튼에 적용
-        if (numberpadButtons && numberpadButtons.length > 0) {
-          updateNumberpadSize();
-        }
       }
       
       const sizeControls = document.getElementById('numberpadSizeControls');
@@ -1197,10 +1192,6 @@ window.addEventListener('DOMContentLoaded', function() {
   loadNumberPadSettings();
   loadThemePreference();
 
-
-  
-  document.documentElement.style.setProperty('--numberpad-button-size', '1');
-  
   descriptionScreen = document.getElementById('descriptionScreen');
   trainingScreen = document.getElementById('trainingScreen');
   resultsScreen = document.getElementById('resultsScreen');
